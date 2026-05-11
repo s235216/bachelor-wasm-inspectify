@@ -49,6 +49,14 @@
     "immer": "^10.0.3",
     "monaco-editor": "^0.45.0",
     "unplugin-icons": "22.0.0",
-    "vis-network": "^9.1.9"
+    "vis-network": "^9.1.9",
+    "calculator-wasm-env": "file:src/lib/wasm-pkgs/ce-calculator",
+  "interpreter-wasm-env": "file:src/lib/wasm-pkgs/ce-interpreter",
+    "parser-wasm-env": "file:src/lib/wasm-pkgs/ce-parser",
+    "riscv-wasm-env": "file:src/lib/wasm-pkgs/ce-riscv",
+    "security-wasm-env": "file:src/lib/wasm-pkgs/ce-security",
+    "sign-wasm-env": "file:src/lib/wasm-pkgs/ce-sign",
+    "bigcl-wasm-env": "file:src/lib/wasm-pkgs/ce-bigcl",
+    "compiler-wasm-env": "file:src/lib/wasm-pkgs/ce-compiler"
   }
 }

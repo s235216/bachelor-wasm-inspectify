@@ -60,13 +60,13 @@ export class Io<A extends ce_shell.Analysis> {
       });
 
       analysisRequest.data.then(({ output, error, meta, annotation }) => {
-        this.meta = meta.json;
+        this.meta = meta;
         this.reference = {
           input: this.input,
           outputState: 'Current',
-          output: output?.json as any,
+          output: output,
           validation: { type: 'Correct' },
-          annotation: annotation?.json as any,
+          annotation: annotation,
           job: null,
         };
       });
@@ -77,7 +77,7 @@ export class Io<A extends ce_shell.Analysis> {
 
   async generate(seed?: number): Promise<Input<A>> {
     const result = await api.generate({ analysis: this.analysis, seed: seed ?? null }).data;
-    this.input = result.json as any;
-    return result.json as any;
+    this.input = result as any;
+    return result as any;
   }
 }

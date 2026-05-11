@@ -17,6 +17,52 @@ pub struct Output {
     pretty: Stringify<Commands>,
 }
 
+use rand::SeedableRng;
+use wasm_bindgen::prelude::*;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ReferenceExecution {
+    meta: Option<<ParserEnv as Env>::Meta>,
+    output: Option<Output>,
+    annotation: Option<<ParserEnv as Env>::Annotation>,
+    error: Option<String>,
+}
+
+#[wasm_bindgen]
+pub async fn parser_wasm_reference(input_json: String) -> Option<String> {
+    let input_result: Result<Input, serde_json::Error> = serde_json::from_str(&input_json);
+    let res = match input_result {
+        Ok(input) => {
+            let meta = Some(ParserEnv::meta(&input));
+            let output = ParserEnv::run(&input);
+            let error = output.as_ref().err().map(|e| e.to_string());
+            let output = output.ok();
+            let annotation = output
+                .as_ref()
+                .and_then(|o| ParserEnv::validate(&input, o).ok())
+                .map(|(_, ann)| ann);
+            ReferenceExecution { meta, output, annotation, error }
+        }
+        Err(e) => ReferenceExecution { 
+            output: None,
+            meta: None,
+            annotation: None,
+            error: Some(e.to_string())
+        }
+    };
+    serde_json::to_string(&res).ok()
+}
+
+#[wasm_bindgen]
+pub async fn parser_wasm_generate(seed: Option<u64>) -> Option<String> {
+    let mut rng = match seed {
+            Some(seed) => rand::rngs::SmallRng::seed_from_u64(seed),
+            None => rand::rngs::SmallRng::from_os_rng(),
+        };
+    serde_json::to_string(&Input::gn(&mut (), &mut rng)).ok()
+}
+
+
 impl Env for ParserEnv {
     type Input = Input;
 

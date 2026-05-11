@@ -1,17 +1,90 @@
+import calcInit, { calc_wasm_reference, calc_wasm_generate } from 'calculator-wasm-env';
+import interpreterInit, { interpreter_wasm_reference, interpreter_wasm_generate } from 'interpreter-wasm-env';
+import parserInit, { parser_wasm_reference, parser_wasm_generate } from 'parser-wasm-env';
+import riscvInit, { riscv_wasm_reference, riscv_wasm_generate } from 'riscv-wasm-env';
+import securityInit, { security_wasm_reference, security_wasm_generate } from 'security-wasm-env';
+import signInit, { sign_wasm_reference, sign_wasm_generate } from 'sign-wasm-env';
+import bigclInit, { bigcl_wasm_reference, bigcl_wasm_generate } from 'bigcl-wasm-env';
+import compilerInit, { compiler_wasm_reference, compiler_wasm_generate } from 'compiler-wasm-env';
+
+// Source - https://stackoverflow.com/a/76351967
+// Posted by Douglas Meyer
+// Retrieved 2026-04-14, License - CC BY-SA 4.0
+
+const isType = <Type>(thing: any): thing is Type => true;
+
+function getWasmRef(analysis: ce_shell.Analysis) {
+  switch (analysis) {
+    case 'Calculator': return calc_wasm_reference;
+    case 'Parser': return parser_wasm_reference;
+    case 'Compiler': return compiler_wasm_reference;
+    case 'Interpreter': return interpreter_wasm_reference;
+    case 'BiGCL': return bigcl_wasm_reference;
+    case 'RiscV': return riscv_wasm_reference;
+    case 'Security': return security_wasm_reference;
+    case 'Sign': return sign_wasm_reference;
+  }
+}
+
+function getWasmGen(analysis: ce_shell.Analysis) {
+  switch (analysis) {
+    case 'Calculator': return calc_wasm_generate;
+    case 'Parser': return parser_wasm_generate;
+    case 'Compiler': return compiler_wasm_generate;
+    case 'Interpreter': return interpreter_wasm_generate;
+    case 'BiGCL': return bigcl_wasm_generate;
+    case 'RiscV': return riscv_wasm_generate;
+    case 'Security': return security_wasm_generate;
+    case 'Sign': return sign_wasm_generate;
+  }
+}
+
+function getWasmInit(analysis: ce_shell.Analysis) {
+  switch (analysis) {
+    case 'Calculator': return calcInit; 
+    case 'Parser': return parserInit;
+    case 'Compiler': return compilerInit;
+    case 'Interpreter': return interpreterInit; 
+    case 'BiGCL': return bigclInit;
+    case 'RiscV': return riscvInit;
+    case 'Security': return securityInit;
+    case 'Sign': return signInit;
+  }
+}
+
 const request =
   <Req, Res>(
-    path: string,
+    path: ApiPath,
   ) =>
   (
     req: Req,
-  ): { data: Promise<Res>; abort: () => void } => {
-    const controller = new AbortController();
-    
+  ): { data: Promise<Res> } => {
+    switch (path) {
+      case ApiPath.Reference:
+        if (!isType<ce_shell.io.Input>(req))
+          break;
+        return {
+          data: (async () => {
+            const res = await getWasmRef(req.analysis)(JSON.stringify(req.json));
+            return res ? JSON.parse(res) : "" as Res;
+          })()
+        };
+      
+      case ApiPath.Generate:
+        if (!isType<inspectify.endpoints.GenerateParams>(req))
+          break;
+        return {
+          data: (async () => {
+            await getWasmInit(req.analysis)();
+            const res = await getWasmGen(req.analysis)(req.seed ? BigInt(req.seed) : null);
+            return res ? JSON.parse(res) : "" as Res
+          })()
+        };
+    }
     return {
       data: (async () => {
-        return "" as Res;
-      })(),
-      abort: () => controller.abort(),
+        return "" as Res
+      })()
     };
   };
 
@@ -250,9 +323,9 @@ export namespace driver {
 export namespace inspectify {
   export namespace endpoints {
     export type ReferenceExecution = {
-      meta: ce_shell.io.Meta,
-      output: (ce_shell.io.Output | null),
-      annotation: (ce_shell.io.Annotation | null),
+      meta: (any | null),
+      output: (any | null),
+      annotation: (any | null),
       error: (string | null)
     };
     export type GenerateParams = {
@@ -291,7 +364,13 @@ export namespace inspectify {
     };
   }
 }
+
+enum ApiPath {
+  Generate,
+  Reference
+}
+
 export const api = {
-    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>("/generate"),
-    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>("/reference"),
+    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>(ApiPath.Generate),
+    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>(ApiPath.Reference),
 };
