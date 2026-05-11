@@ -1,6 +1,6 @@
 <script lang="ts">
   import { driver } from '$lib/api';
-  import { jobsStore, jobsListStore, connectionStore } from '$lib/events.svelte';
+  import { jobsStore, jobsListStore } from '$lib/events.svelte';
 
   import ChevronDoubleUp from '~icons/heroicons/chevron-double-up';
   import Link from '~icons/heroicons/link';
@@ -51,9 +51,7 @@
 
   <div class="text-xs text-slate-400">v{version}</div>
   <div
-    class="place-self-end {connectionStore.state == 'connected'
-      ? 'bg-green-600'
-      : 'bg-orange-600'} p-1"
+    class="place-self-end 'bg-green-600' p-1"
   >
     <Link />
   </div>

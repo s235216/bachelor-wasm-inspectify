@@ -44,7 +44,7 @@ export class Io<A extends ce_shell.Analysis> {
     if (!this.currentJob || !(this.currentJob.jobId in jobsStore.jobs))
       return {
         input: this.input,
-        outputState: 'None',
+        outputState: 'Current',
         job: null,
         output: null,
         referenceOutput: null,
