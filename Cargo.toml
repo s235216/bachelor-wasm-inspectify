@@ -80,7 +80,7 @@ stdx = { path = "./crates/stdx" }
 # ] }
 tapi = { git = "https://github.com/oeb25/tapi.git", features = [
     "chrono",
-    "endpoints",
+    # "endpoints",
     "smol_str",
     "toml",
 ] }

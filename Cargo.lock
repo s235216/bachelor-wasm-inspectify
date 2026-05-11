@@ -504,6 +504,7 @@ name = "chip"
 version = "0.3.0"
 dependencies = [
  "clap",
+ "gcl",
  "indexmap",
  "itertools 0.14.0",
  "lalrpop",
@@ -3146,7 +3147,6 @@ name = "tapi"
 version = "0.1.0"
 source = "git+https://github.com/oeb25/tapi.git#25c4068cef6aa56d0ef5fd0a00f9cda15879809b"
 dependencies = [
- "axum",
  "chrono",
  "dyn-clone",
  "futures-util",

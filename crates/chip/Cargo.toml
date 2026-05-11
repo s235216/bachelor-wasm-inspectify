@@ -18,6 +18,7 @@ serde.workspace = true
 smtlib.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
+gcl.workspace = true
 
 [build-dependencies]
 lalrpop.workspace = true
