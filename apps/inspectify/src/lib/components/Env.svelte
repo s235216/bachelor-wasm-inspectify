@@ -1,5 +1,4 @@
 <script lang="ts" generics="A extends ce_shell.Analysis">
-  import { showReference } from '$lib/jobs.svelte';
 
   import { crossfade } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
@@ -8,7 +7,6 @@
   import Ansi from './Ansi.svelte';
   import JobTabs from './JobTabs.svelte';
   import TrackingScroll from './TrackingScroll.svelte';
-  import ValidationIndicator from './ValidationIndicator.svelte';
 
   interface Props {
     io: Io<A>;
@@ -19,7 +17,6 @@
           input: Input<A>;
           meta: Meta<A>;
           output: Output<A>;
-          referenceOutput: Output<A>;
           annotation: Annotation<A> | null;
         },
       ]
@@ -29,7 +26,7 @@
   let { io, inputView: input, outputView: output }: Props = $props();
   const notNull = <T,>(x: T | null): T => x!;
 
-  let results = $derived(showReference.show ? io.reference : io.results);
+  let results = $derived(io.reference);
 
   let latestJob = $derived(results.job);
   let hideTabs = $state(true);
@@ -54,7 +51,7 @@
         ? 'opacity-20 transition delay-[400ms] duration-1000'
         : 'transition'}"
     >
-      {#if results.output && results.referenceOutput}
+      {#if results.output }
         <div in:send={{ key }} out:receive={{ key }} class="grid">
           <div class="grid grid-rows-[1fr_auto]">
             <div class="relative">
@@ -63,7 +60,6 @@
                   input: results.input,
                   meta: notNull(io.meta),
                   output: notNull(results.output),
-                  referenceOutput: notNull(results.referenceOutput),
                   annotation: results.annotation,
                 })}
               </div>
@@ -113,10 +109,5 @@
         </div>
       {/if}
     </div>
-  </div>
-  <div class="grid">
-    {#if !showReference.show}
-      <ValidationIndicator {io} />
-    {/if}
   </div>
 </div>

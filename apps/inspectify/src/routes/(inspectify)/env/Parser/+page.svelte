@@ -11,7 +11,7 @@
     <StandardInput analysis="Parser" code="commands" {io} />
   {/snippet}
 
-  {#snippet outputView({ output, referenceOutput })}
+  {#snippet outputView({ output })}
     <div class="relative">
       <div class="absolute inset-0 grid">
         <pre class="p-2"><code

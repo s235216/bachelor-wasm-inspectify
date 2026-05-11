@@ -3,7 +3,6 @@
   import { page } from '$app/stores';
 
   import CommandLineIcon from '~icons/heroicons/command-line';
-  import { showReference } from '$lib/jobs.svelte';
   interface Props {
     children?: import('svelte').Snippet;
   }
@@ -37,20 +36,6 @@
   </div>
 
   <div class="flex-1"></div>
-
-  <div
-    class="flex select-none items-center space-x-0.5 p-2 text-xs font-semibold text-slate-300 transition hover:text-white"
-  >
-    <label for="show-reference" class="flex cursor-pointer items-center space-x-1 p-2"
-      >Show reference</label
-    >
-    <input
-      type="checkbox"
-      name="show-reference"
-      id="show-reference"
-      bind:checked={showReference.show}
-    />
-  </div>
 </nav>
 
 {@render children?.()}

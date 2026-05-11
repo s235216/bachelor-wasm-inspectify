@@ -2,8 +2,6 @@ import type { driver } from '$lib/api';
 
 export const showStatus: { show: boolean } = $state({ show: false });
 
-export const showReference: { show: boolean } = $state({ show: false });
-
 export const selectedJobId: { jobId: driver.job.JobId | null } = $state({ jobId: null });
 
 export const tabs = [

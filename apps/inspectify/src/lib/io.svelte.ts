@@ -1,6 +1,6 @@
 import { ce_shell, api, type ce_core } from './api';
 import { jobsStore, type Job, compilationStatus } from './events.svelte';
-import { selectedJobId, showReference } from './jobs.svelte';
+import { selectedJobId } from './jobs.svelte';
 import { browser } from '$app/environment';
 
 type Mapping = { [A in ce_shell.Analysis]: (ce_shell.Envs & { analysis: A })['io'] };
@@ -16,7 +16,6 @@ export type Results<A extends ce_shell.Analysis> = {
   input: Input<A>;
   outputState: OutputState;
   output: Output<A> | null;
-  referenceOutput: Output<A> | null;
   validation: ce_core.ValidationResult | { type: 'Failure'; message: string } | null;
   annotation: Annotation<A> | null;
   job: Job | null;
@@ -26,7 +25,6 @@ const defaultResults = <A extends ce_shell.Analysis>(): Results<A> => ({
   input: null as any,
   outputState: 'None',
   output: null,
-  referenceOutput: null,
   validation: null,
   annotation: null,
   job: null,
@@ -47,7 +45,6 @@ export class Io<A extends ce_shell.Analysis> {
         outputState: 'Current',
         job: null,
         output: null,
-        referenceOutput: null,
         validation: null,
         annotation: null,
       } satisfies Results<A>;
@@ -56,7 +53,6 @@ export class Io<A extends ce_shell.Analysis> {
       input: this.currentJob.input,
       outputState: (job.analysis_data?.output?.json || job.state != 'Running') ? 'Current' : 'Stale',
       output: job.analysis_data?.output?.json as any,
-      referenceOutput: job.analysis_data?.reference_output?.json as any,
       validation: job.analysis_data?.validation as any,
       annotation: job.analysis_data?.annotation?.json as any,
       job: job,
@@ -80,10 +76,6 @@ export class Io<A extends ce_shell.Analysis> {
     // Kick off analysis
     $effect(() => {
       if (!browser) {
-        return;
-      }
-
-      if (showReference.show) {
         return;
       }
 
@@ -147,7 +139,6 @@ export class Io<A extends ce_shell.Analysis> {
           input: this.input,
           outputState: 'Current',
           output: output?.json as any,
-          referenceOutput: output?.json as any,
           validation: { type: 'Correct' },
           annotation: annotation?.json as any,
           job: null,

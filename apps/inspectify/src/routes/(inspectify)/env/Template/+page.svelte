@@ -10,5 +10,5 @@
   {#snippet inputView()}
     <StandardInput analysis="Parser" {io} />
   {/snippet}
-  {#snippet outputView({ output, referenceOutput })}{/snippet}
+  {#snippet outputView({ output })}{/snippet}
 </Env>
