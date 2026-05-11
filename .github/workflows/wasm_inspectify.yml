@@ -35,9 +35,6 @@ jobs:
         uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen,wasm-pack,just
-
-      - name: Build wasm pkg
-        run: just build-wasm-inspectify
 			
       - name: Build Frontend
         run: just inspectify-app
