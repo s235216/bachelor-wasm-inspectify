@@ -43,13 +43,12 @@ jobs:
           tool: wasm-bindgen,wasm-pack,just
 
       - name: Build Frontend
-        run: just app-build chip
+        run: just inspectify-app
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          external_repository: team-checkr/team-checkr.github.io
           publish_branch: main
           publish_dir: apps/chip/build/
