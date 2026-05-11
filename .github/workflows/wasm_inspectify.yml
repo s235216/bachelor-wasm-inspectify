@@ -3,6 +3,11 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: ["main"]
+    workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -15,6 +20,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,14 +36,19 @@ jobs:
 
       - name: Install Node
         uses: actions/setup-node@v4
-		
+
       - name: Install wasm-bindgen
         uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen,wasm-pack,just
 
-	  - name: Build wasm
-        run: just build-wasm-inspectify
-		
       - name: Build Frontend
         run: just inspectify-app
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_branch: main
+          publish_dir: apps/inspectify/build/
+
