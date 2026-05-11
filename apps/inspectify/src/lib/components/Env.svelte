@@ -5,7 +5,6 @@
   import type { ce_shell } from '$lib/api';
   import type { Input, Io, Meta, Output, Annotation } from '$lib/io.svelte';
   import Ansi from './Ansi.svelte';
-  import JobTabs from './JobTabs.svelte';
   import TrackingScroll from './TrackingScroll.svelte';
 
   interface Props {
@@ -64,13 +63,6 @@
                 })}
               </div>
             </div>
-            {#if latestJob}
-              <div
-                class="grid border-t {hideTabs ? 'grid-rows-[1fr_auto]' : 'grid-rows-[30vh_auto]'}"
-              >
-                <JobTabs selectedJob={latestJob} canHide bind:hidden={hideTabs} />
-              </div>
-            {/if}
           </div>
         </div>
       {:else if latestJob?.state == 'Failed'}
@@ -85,13 +77,6 @@
               <Ansi spans={latestJob.spans} />
             </TrackingScroll>
           </div>
-          {#if latestJob}
-            <div
-              class="grid border-t {hideTabs ? 'grid-rows-[1fr_auto]' : 'grid-rows-[30vh_auto]'}"
-            >
-              <JobTabs selectedJob={latestJob} canHide bind:hidden={hideTabs} />
-            </div>
-          {/if}
         </div>
       {:else}
         <div

@@ -1,10 +1,7 @@
 <script lang="ts">
   import Ansi from '$lib/components/Ansi.svelte';
-  import JobPane from '$lib/components/JobPane.svelte';
-  import StatusBar from '$lib/components/StatusBar.svelte';
   import TrackingScroll from '$lib/components/TrackingScroll.svelte';
   import { compilationStatus, jobsStore } from '$lib/events.svelte';
-  import { showStatus } from '$lib/jobs.svelte';
 
   import ArrowPath from '~icons/heroicons/arrow-path';
   import Fire from '~icons/heroicons/fire';
@@ -28,12 +25,6 @@
       {@render children?.()}
     </div>
   </main>
-
-  {#if showStatus.show}
-    <div class="h-[35vh]">
-      <JobPane />
-    </div>
-  {/if}
 
   {#if compilationStatus.status && compilationStatus.status.state != 'Succeeded'}
     <div class="absolute inset-0 mt-20 grid items-start justify-center">
@@ -69,5 +60,3 @@
     </div>
   {/if}
 </div>
-
-<StatusBar />

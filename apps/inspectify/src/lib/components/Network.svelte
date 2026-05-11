@@ -13,9 +13,7 @@
   let network: Network | undefined = $state();
 
   let redraw = $derived(async () => {
-    let preDot = dot;
     const vis = await import('vis-network/esnext');
-    if (preDot != dot) return;
     const data = vis.parseDOTNetwork(dot);
 
     if (network) {
