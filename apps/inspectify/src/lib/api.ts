@@ -1,10 +1,3 @@
-export type ApiOptions = {
-  fetch?: typeof fetch;
-  apiBase?: string;
-  headers?: Record<string, string>;
-};
-
-
 type RequestType = "none" | "json";
 type ResponseType = "none" | "text" | "json";
 type Method = "DELETE" | "GET" | "PUT" | "POST" | "HEAD" | "TRACE" | "PATCH";
@@ -17,7 +10,6 @@ const request =
   ) =>
   (
     req: Req,
-    options?: ApiOptions
   ): { data: Promise<Res>; abort: () => void } => {
     const controller = new AbortController();
     
