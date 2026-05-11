@@ -3,9 +3,10 @@ name: Deploy Inspectify
 on:
   push:
     branches: ["main"]
+    workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
@@ -19,6 +20,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,16 +42,14 @@ jobs:
         with:
           tool: wasm-bindgen,wasm-pack,just
 
-      - name: Create wasm dir 
-        run:  |
-          mkdir -p ${{ github.workspace }}/apps/inspectify/src/lib/wasm-pkg
-			
       - name: Build Frontend
-        run: just inspectify-app
+        run: just app-build chip
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: peaceiris/actions-gh-pages@v4
         with:
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          external_repository: team-checkr/team-checkr.github.io
           publish_branch: main
-          publish_dir: apps/inspectify/build/
+          publish_dir: apps/chip/build/
