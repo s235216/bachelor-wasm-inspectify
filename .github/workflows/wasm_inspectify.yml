@@ -30,11 +30,14 @@ jobs:
 
       - name: Install Node
         uses: actions/setup-node@v4
-
+		
       - name: Install wasm-bindgen
         uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen,wasm-pack,just
-			
+
+	  - name: Build wasm
+        run: just build-wasm-inspectify
+		
       - name: Build Frontend
         run: just inspectify-app
