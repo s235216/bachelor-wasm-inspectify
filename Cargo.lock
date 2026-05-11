@@ -1159,9 +1159,9 @@ checksum = "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
 
 [[package]]
 name = "graphviz-rust"
-version = "0.9.5"
+version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "844f6cc740402218a8b4c450d4569f368c754d01e41a1917751c4fa3750a942e"
+checksum = "dee83cefff83c5dd5f34c603145f4e8d478e70cc17873049b6a36eeaf37b250a"
 dependencies = [
  "dot-generator",
  "dot-structures",
@@ -1169,7 +1169,7 @@ dependencies = [
  "into-attr-derive",
  "pest",
  "pest_derive",
- "rand 0.8.5",
+ "rand 0.9.1",
  "tempfile",
 ]
 
