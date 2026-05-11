@@ -42,8 +42,11 @@ jobs:
         with:
           tool: wasm-bindgen,wasm-pack,just
 
+      - name: Build wasm
+        run: just build-inspectify-wasm
+
       - name: Build Frontend
-        run: just inspectify-app
+        run: just build-inspectify-app
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -51,4 +54,4 @@ jobs:
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           publish_branch: main
-          publish_dir: apps/chip/build/
+          publish_dir: apps/inspectify/build/
