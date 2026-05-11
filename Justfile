@@ -14,8 +14,6 @@ build-wasm:
 # Inspectify
 
 build-wasm-inspectify:
-    cd apps/inspectify/src/lib; \
-    rm -rf wasm-pkg
     cd crates/inspectify-wasm; \
     wasm-pack build --target web --release; \
     cp -r pkg ../../apps/inspectify/src/lib/wasm-pkg; \
