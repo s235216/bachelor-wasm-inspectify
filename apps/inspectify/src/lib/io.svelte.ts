@@ -1,6 +1,5 @@
 import { ce_shell, api, type ce_core } from './api';
-import { jobsStore, type Job, compilationStatus } from './events.svelte';
-import { selectedJobId } from './jobs.svelte';
+import { type Job, compilationStatus } from './events.svelte';
 import { browser } from '$app/environment';
 
 type Mapping = { [A in ce_shell.Analysis]: (ce_shell.Envs & { analysis: A })['io'] };
@@ -36,29 +35,6 @@ export class Io<A extends ce_shell.Analysis> {
   meta: Meta<A> | null = $state(null);
   reference: Results<A> = $state(defaultResults());
 
-  currentJob: { jobId: number; input: Input<A> } | null = $state(null);
-
-  results: Results<A> = $derived.by<Results<A>>(() => {
-    if (!this.currentJob || !(this.currentJob.jobId in jobsStore.jobs))
-      return {
-        input: this.input,
-        outputState: 'Current',
-        job: null,
-        output: null,
-        validation: null,
-        annotation: null,
-      } satisfies Results<A>;
-    const job = jobsStore.jobs[this.currentJob.jobId];
-    return {
-      input: this.currentJob.input,
-      outputState: (job.analysis_data?.output?.json || job.state != 'Running') ? 'Current' : 'Stale',
-      output: job.analysis_data?.output?.json as any,
-      validation: job.analysis_data?.validation as any,
-      annotation: job.analysis_data?.annotation?.json as any,
-      job: job,
-    } satisfies Results<A>;
-  });
-
   constructor(analysis: A, defaultInput: Input<A>, seed?: number) {
     this.analysis = analysis;
     this.input = defaultInput;
@@ -72,56 +48,6 @@ export class Io<A extends ce_shell.Analysis> {
         seed = parseInt(paramSeed);
       }
     }
-
-    // Kick off analysis
-    $effect(() => {
-      if (!browser) {
-        return;
-      }
-
-      if (compilationStatus.status?.state != 'Succeeded') {
-        return;
-      }
-
-      const inputSnapshot = $state.snapshot(this.input);
-
-      let cancel = () => {};
-      let stop = false;
-
-      const run = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        if (stop) return;
-
-        const analysisRequest = api.analysis({
-          analysis,
-          json: inputSnapshot,
-          // TODO: we should avoid this somehow
-          hash: { bytes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
-        });
-
-        cancel = () => {
-          analysisRequest.abort();
-        };
-        const res = await analysisRequest.data;
-        if (!res) return;
-        cancel = () => {
-          api.jobsCancel(res.id).data.catch(() => {});
-        };
-
-        this.currentJob = { jobId: res.id, input: inputSnapshot };
-      };
-
-      run();
-
-      return () => {
-        stop = true;
-        cancel();
-      };
-    });
-
-    $effect(() => {
-      if (this.currentJob) selectedJobId.jobId = this.currentJob.jobId;
-    });
 
     $effect(() => {
       if (!browser) return;
@@ -144,10 +70,6 @@ export class Io<A extends ce_shell.Analysis> {
           job: null,
         };
       });
-
-      return () => {
-        analysisRequest.abort();
-      };
     });
 
     this.generate(seed);

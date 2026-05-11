@@ -1,5 +1,4 @@
-import { browser } from '$app/environment';
-import { api, driver, type inspectify } from './api';
+import { driver, type inspectify } from './api';
 
 export type Job = Omit<inspectify.endpoints.Job, 'kind'> & {
   kind: driver.job.JobKind | { kind: 'Waiting'; data: {} };
@@ -15,12 +14,3 @@ export const compilationStatus: { status: inspectify.endpoints.CompilationStatus
     error_output: null, 
   },
 });
-
-export const groupsConfigStore: { config: inspectify.checko.config.GroupsConfig | null } = $state({
-  config: null,
-});
-export const programsStore: { programs: inspectify.endpoints.Program[] } = $state({ programs: [] });
-
-export const groupProgramJobAssignedStore: {
-  groups: Record<string, Record<string, driver.job.JobId>>;
-} = $state({ groups: {} });
