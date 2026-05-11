@@ -1,12 +1,6 @@
-type RequestType = "none" | "json";
-type ResponseType = "none" | "text" | "json";
-type Method = "DELETE" | "GET" | "PUT" | "POST" | "HEAD" | "TRACE" | "PATCH";
 const request =
   <Req, Res>(
-    reqTy: RequestType,
-    method: Method,
     path: string,
-    resTy: ResponseType
   ) =>
   (
     req: Req,
@@ -21,14 +15,6 @@ const request =
     };
   };
 
-
-export type GroupConfig = {
-  name: inspectify.checko.config.GroupName,
-  git: (string | null),
-  path: (string | null),
-  run: (string | null),
-  commit: Record<ce_shell.Analysis, string>
-};
 export namespace BiGCL {
   export type Input = {
     commands: string
@@ -262,47 +248,6 @@ export namespace driver {
   }
 }
 export namespace inspectify {
-  export namespace checko {
-    export type GroupStatus =
-      | "Initial"
-      | "CheckingForUpdate"
-      | "Compiling"
-      | "Testing"
-      | "CompilationError"
-      | "Finished";
-    export const GROUP_STATUS: GroupStatus[] = ["Initial", "CheckingForUpdate", "Compiling", "Testing", "CompilationError", "Finished"];
-    export namespace config {
-      export type GroupsConfig = {
-        ignored_authors: string[],
-        groups: GroupConfig[]
-      };
-      export type GroupName = string;
-    }
-    export namespace scoreboard {
-      export type PublicState = {
-        last_finished: (string | null),
-        analysis: inspectify.checko.scoreboard.PublicAnalysis[],
-        groups: inspectify.checko.scoreboard.PublicGroup[]
-      };
-      export type PublicAnalysis = {
-        analysis: ce_shell.Analysis,
-        programs: (ce_shell.io.Input | null)[]
-      };
-      export type PublicGroup = {
-        name: inspectify.checko.config.GroupName,
-        analysis_results: inspectify.checko.scoreboard.PublicAnalysisResults[]
-      };
-      export type PublicAnalysisResults = {
-        analysis: ce_shell.Analysis,
-        status: inspectify.checko.GroupStatus,
-        last_hash: (string | null),
-        results: inspectify.checko.scoreboard.PublicProgramResult[]
-      };
-      export type PublicProgramResult = {
-        state: driver.job.JobState
-      };
-    }
-  }
   export namespace endpoints {
     export type ReferenceExecution = {
       meta: ce_shell.io.Meta,
@@ -310,22 +255,9 @@ export namespace inspectify {
       annotation: (ce_shell.io.Annotation | null),
       error: (string | null)
     };
-    export type PublicEvent =
-      | { "type": "Reset" }
-      | { "type": "StateChanged", "value": inspectify.checko.scoreboard.PublicState };
     export type GenerateParams = {
       analysis: ce_shell.Analysis,
       seed: (number | null)
-    };
-    export type Event =
-      | { "type": "Reset" }
-      | { "type": "CompilationStatus", "value": { status: inspectify.endpoints.CompilationStatus } }
-      | { "type": "JobChanged", "value": { job: inspectify.endpoints.Job } }
-      | { "type": "JobsChanged", "value": { jobs: driver.job.JobId[] } }
-      | { "type": "GroupsConfig", "value": { config: inspectify.checko.config.GroupsConfig } }
-      | { "type": "ProgramsConfig", "value": { programs: inspectify.endpoints.Program[] } };
-    export type AnalysisExecution = {
-      id: driver.job.JobId
     };
     export type CompilationStatus = {
       id: (driver.job.JobId | null),
@@ -336,7 +268,6 @@ export namespace inspectify {
       id: driver.job.JobId,
       state: driver.job.JobState,
       kind: driver.job.JobKind,
-      group_name: (inspectify.checko.config.GroupName | null),
       stdout: string,
       spans: inspectify.endpoints.Span[],
       analysis_data: (inspectify.endpoints.AnalysisData | null)
@@ -361,9 +292,6 @@ export namespace inspectify {
   }
 }
 export const api = {
-    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>("json", "POST", "/generate", "json"),
-    checkoCsv: request<Record<string, never>, string>("none", "GET", "/checko-csv", "text"),
-    jobsCancel: request<driver.job.JobId, void>("json", "POST", "/jobs/cancel", "none"),
-    analysis: request<ce_shell.io.Input, (inspectify.endpoints.AnalysisExecution | null)>("json", "POST", "/analysis", "json"),
-    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>("json", "POST", "/reference", "json"),
+    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>("/generate"),
+    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>("/reference"),
 };
