@@ -13,6 +13,17 @@ build-wasm:
 
 # Inspectify
 
+build-wasm-inspectify:
+    cd apps/inspectify/src/lib; \
+    rm -rf wasm-pkgs; \
+    mkdir wasm-pkgs
+    for env in `ls crates/envs/`; do \
+        cd crates/envs/$env; \
+        wasm-pack build --target web --release; \
+        cp -rf pkg ../../../apps/inspectify/src/lib/wasm-pkgs/$env; \
+        cd ../../..; \
+    done
+
 inspectify ARGS="":
     RUST_LOG=debug cargo run -p inspectify -- {{ARGS}}
 
