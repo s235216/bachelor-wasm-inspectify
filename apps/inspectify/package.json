@@ -49,6 +49,7 @@
     "immer": "^10.0.3",
     "monaco-editor": "^0.45.0",
     "unplugin-icons": "22.0.0",
-    "vis-network": "^9.1.9"
+    "vis-network": "^9.1.9",
+    "wasm-env": "file:src/lib/wasm-pkg/pkg"
   }
 }

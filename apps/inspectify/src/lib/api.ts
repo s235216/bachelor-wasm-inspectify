@@ -1,19 +1,21 @@
+import init, { faux_api } from 'wasm-env';
+
 const request =
   <Req, Res>(
-    path: string,
+    path: number,
   ) =>
   (
     req: Req,
-  ): { data: Promise<Res>; abort: () => void } => {
-    const controller = new AbortController();
-    
+  ): { data: Promise<Res> } => {
     return {
       data: (async () => {
-        return "" as Res;
+        if (!path) await init();
+        const res = await faux_api(path, JSON.stringify(req));
+        return (res ? JSON.parse(res) : "") as Res;
       })(),
-      abort: () => controller.abort(),
     };
   };
+
 
 export namespace BiGCL {
   export type Input = {
@@ -291,7 +293,13 @@ export namespace inspectify {
     };
   }
 }
+
+enum ApiPath {
+  Generate,
+  Reference
+}
+
 export const api = {
-    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>("/generate"),
-    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>("/reference"),
+    generate: request<inspectify.endpoints.GenerateParams, ce_shell.io.Input>(ApiPath.Generate),
+    reference: request<ce_shell.io.Input, inspectify.endpoints.ReferenceExecution>(ApiPath.Reference),
 };

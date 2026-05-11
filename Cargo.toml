@@ -12,6 +12,7 @@ members = [
     "crates/gcl",
     "crates/gitty",
     "crates/inspectify",
+    "crates/inspectify-wasm",
     "crates/mcltl-rs",
     "crates/stdx",
     "crates/xtask",
