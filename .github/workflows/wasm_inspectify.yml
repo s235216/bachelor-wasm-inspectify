@@ -43,9 +43,6 @@ jobs:
       - name: Create wasm dir 
         run:  |
           mkdir -p ${{ github.workspace }}/apps/inspectify/src/lib/wasm-pkg
-          
-      - name: Build wasm pkg
-        run: just build-wasm-inspectify
 			
       - name: Build Frontend
         run: just inspectify-app
