@@ -17,7 +17,7 @@ build-inspectify-app:
     cd apps/inspectify && (npm install && npm run build)
 
 build-inspectify-wasm:
-    mkdir apps/inspectify/src/lib/wasm-pkg
+    mkdir -p apps/inspectify/src/lib/wasm-pkg
     cd crates/inspectify-wasm && wasm-pack build --target web --release; \
     cp -r pkg ../../apps/inspectify/src/lib/wasm-pkg; \
 
