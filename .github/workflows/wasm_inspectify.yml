@@ -2,29 +2,26 @@ name: Deploy Inspectify
 
 on:
   push:
-    branches: ["main"]
-    workflow_dispatch:
-
-permissions:
-  contents: read
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches: ['main']
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build_site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # If you're using pnpm, add this step then change the commands and cache key below to use `pnpm`
+      # - name: Install pnpm
+      #   uses: pnpm/action-setup@v3
+      #   with:
+      #     version: 8
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
       - name: Install rust
         uses: dtolnay/rust-toolchain@stable
@@ -33,9 +30,6 @@ jobs:
           targets: x86_64-unknown-linux-gnu, wasm32-unknown-unknown
 
       - uses: Swatinem/rust-cache@v2
-
-      - name: Install Node
-        uses: actions/setup-node@v4
 
       - name: Install wasm-bindgen
         uses: taiki-e/install-action@v2
@@ -46,12 +40,33 @@ jobs:
         run: just build-inspectify-wasm
 
       - name: Build Frontend
-        run: just build-inspectify-app
+        run: cd apps/inspectify && npm i
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: peaceiris/actions-gh-pages@v4
+      - name: build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
+        run: |
+          cd apps/inspectify && npm run build
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
         with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          publish_branch: main
-          publish_dir: apps/inspectify/build/
+          # this should match the `pages` option in your adapter-static options
+          path: 'apps/inspectify/build/'
+
+  deploy:
+    needs: build_site
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

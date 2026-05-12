@@ -14,7 +14,7 @@ build-wasm:
 # Inspectify
 
 build-inspectify-app:
-    cd apps/inspectify && (npm install && npm run build && npm run deploy)
+    cd apps/inspectify && (npm install && npm run build)
 
 build-inspectify-wasm:
     mkdir apps/inspectify/src/lib/wasm-pkg
