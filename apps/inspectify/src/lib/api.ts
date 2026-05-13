@@ -65,7 +65,7 @@ const request =
           break;
         return {
           data: (async () => {
-            const res = await getWasmRef(req.analysis)(JSON.stringify(req.json));
+            const res = getWasmRef(req.analysis)(JSON.stringify(req.json));
             return res ? JSON.parse(res) : "" as Res;
           })()
         };
@@ -76,7 +76,7 @@ const request =
         return {
           data: (async () => {
             await getWasmInit(req.analysis)();
-            const res = await getWasmGen(req.analysis)(req.seed ? BigInt(req.seed) : null);
+            const res = getWasmGen(req.analysis)(req.seed ? BigInt(req.seed) : null);
             return res ? JSON.parse(res) : "" as Res
           })()
         };

@@ -40,7 +40,7 @@ pub struct ReferenceExecution {
 }
 
 #[wasm_bindgen]
-pub async fn compiler_wasm_reference(input_json: String) -> Option<String> {
+pub fn compiler_wasm_reference(input_json: String) -> Option<String> {
     let input_result: Result<Input, serde_json::Error> = serde_json::from_str(&input_json);
     let res = match input_result {
         Ok(input) => {
@@ -66,7 +66,7 @@ pub async fn compiler_wasm_reference(input_json: String) -> Option<String> {
 
 
 #[wasm_bindgen]
-pub async fn compiler_wasm_generate(seed: Option<u64>) -> Option<String> {
+pub fn compiler_wasm_generate(seed: Option<u64>) -> Option<String> {
     let mut rng = match seed {
             Some(seed) => rand::rngs::SmallRng::seed_from_u64(seed),
             None => rand::rngs::SmallRng::from_os_rng(),

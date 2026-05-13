@@ -329,7 +329,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -346,7 +345,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -366,7 +364,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -398,7 +395,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -413,7 +409,6 @@ dependencies = [
  "stdx",
  "tapi",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -433,7 +428,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -450,7 +444,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]
@@ -496,7 +489,6 @@ dependencies = [
  "tapi",
  "tracing",
  "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]

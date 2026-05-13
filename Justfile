@@ -13,7 +13,7 @@ build-wasm:
 
 # Inspectify
 
-build-wasm-inspectify:
+build-inspectify-wasm:
     cd apps/inspectify/src/lib; \
     rm -rf wasm-pkgs; \
     mkdir wasm-pkgs
