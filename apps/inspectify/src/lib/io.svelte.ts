@@ -1,5 +1,4 @@
 import { ce_shell, api, type ce_core } from './api';
-import { type Job, compilationStatus } from './events.svelte';
 import { browser } from '$app/environment';
 
 type Mapping = { [A in ce_shell.Analysis]: (ce_shell.Envs & { analysis: A })['io'] };
@@ -17,7 +16,6 @@ export type Results<A extends ce_shell.Analysis> = {
   output: Output<A> | null;
   validation: ce_core.ValidationResult | { type: 'Failure'; message: string } | null;
   annotation: Annotation<A> | null;
-  job: Job | null;
 };
 
 const defaultResults = <A extends ce_shell.Analysis>(): Results<A> => ({
@@ -26,7 +24,6 @@ const defaultResults = <A extends ce_shell.Analysis>(): Results<A> => ({
   output: null,
   validation: null,
   annotation: null,
-  job: null,
 });
 
 export class Io<A extends ce_shell.Analysis> {
@@ -67,7 +64,6 @@ export class Io<A extends ce_shell.Analysis> {
           output: output?.json as any,
           validation: { type: 'Correct' },
           annotation: annotation?.json as any,
-          job: null,
         };
       });
     });
