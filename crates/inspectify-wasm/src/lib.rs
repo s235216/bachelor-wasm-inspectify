@@ -1,7 +1,6 @@
 use ce_shell::{Analysis, Annotation, Input, Meta, Output};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::*;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReferenceExecution {
@@ -40,7 +39,7 @@ fn wasm_generate(input_json: String) -> Option<Input> {
 }
 
 #[wasm_bindgen]
-pub async fn faux_api(path: i32, input_json: String) -> Option<String> {
+pub fn faux_api(path: i32, input_json: String) -> Option<String> {
     match path {
         0 => serde_json::to_string(&wasm_generate(input_json)).ok(),
         1 => serde_json::to_string(&wasm_reference(input_json)).ok(),
