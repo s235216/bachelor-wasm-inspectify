@@ -10,7 +10,7 @@ const request =
     return {
       data: (async () => {
         if (!path) await init();
-        const res = await faux_api(path, JSON.stringify(req));
+        const res = faux_api(path, JSON.stringify(req));
         return (res ? JSON.parse(res) : "") as Res;
       })(),
     };
