@@ -1,4 +1,9 @@
+import { browser } from '$app/environment';
 import init, { faux_api } from 'wasm-env';
+
+if (browser) {
+  await init();
+}
 
 const request =
   <Req, Res>(
@@ -9,7 +14,6 @@ const request =
   ): { data: Promise<Res> } => {
     return {
       data: (async () => {
-        if (!path) await init();
         const res = faux_api(path, JSON.stringify(req));
         return (res ? JSON.parse(res) : "") as Res;
       })(),
