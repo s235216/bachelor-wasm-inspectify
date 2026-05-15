@@ -4,8 +4,6 @@
   import { quintOut } from 'svelte/easing';
   import type { ce_shell } from '$lib/api';
   import type { Input, Io, Meta, Output, Annotation } from '$lib/io.svelte';
-  import Ansi from './Ansi.svelte';
-  import TrackingScroll from './TrackingScroll.svelte';
 
   interface Props {
     io: Io<A>;
@@ -27,7 +25,6 @@
 
   let results = $derived(io.reference);
 
-  let latestJob = $derived(results.job);
   let hideTabs = $state(true);
 
   const [send, receive] = crossfade({
@@ -63,19 +60,6 @@
                 })}
               </div>
             </div>
-          </div>
-        </div>
-      {:else if latestJob?.state == 'Failed'}
-        <div
-          in:send={{ key }}
-          out:receive={{ key }}
-          class="absolute inset-0 grid grid-rows-[auto_1fr_auto] text-xs"
-        >
-          <div class="border-y bg-slate-900 p-2 text-xl font-light italic">Analysis failed</div>
-          <div class="flex overflow-auto">
-            <TrackingScroll>
-              <Ansi spans={latestJob.spans} />
-            </TrackingScroll>
           </div>
         </div>
       {:else}
